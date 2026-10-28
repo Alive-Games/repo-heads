@@ -1,0 +1,99 @@
+{
+  "name": "repo-heads",
+  "displayName": "Repo Heads",
+  "description": "See every repo, submodule and worktree in your workspace at a glance: branch, commit, ahead/behind main, whether submodules match their parent's pin, and worktrees.",
+  "version": "1.0.0",
+  "publisher": "alive-games",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "main": "./extension.js",
+  "extensionKind": [
+    "workspace"
+  ],
+  "extensionDependencies": [
+    "vscode.git"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "views": {
+      "scm": [
+        {
+          "id": "repoHeadsTable",
+          "name": "Repo Heads",
+          "icon": "$(git-branch)",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "repoHeads.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "repoHeads.fetchAll",
+        "title": "Fetch All",
+        "icon": "$(cloud-download)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "repoHeads.fetchAll",
+          "when": "view == repoHeadsTable",
+          "group": "navigation@1"
+        },
+        {
+          "command": "repoHeads.refresh",
+          "when": "view == repoHeadsTable",
+          "group": "navigation@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Repo Heads",
+      "properties": {
+        "repoHeads.refreshSeconds": {
+          "type": "number",
+          "default": 30,
+          "description": "How often the view refreshes on its own, in seconds (minimum 5). It also refreshes when VS Code's git state changes."
+        },
+        "repoHeads.trunkBranch": {
+          "type": "string",
+          "default": "main",
+          "description": "Branch on origin to compare each repo with. Falls back to origin's default branch when a repo has no such branch."
+        }
+      }
+    }
+  },
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Alive-Games/repo-heads.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Alive-Games/repo-heads/issues"
+  },
+  "homepage": "https://github.com/Alive-Games/repo-heads#readme",
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "keywords": [
+    "git",
+    "submodules",
+    "worktrees",
+    "monorepo",
+    "branches",
+    "multi-repo"
+  ],
+  "galleryBanner": {
+    "color": "#1e1e2e",
+    "theme": "dark"
+  }
+}
