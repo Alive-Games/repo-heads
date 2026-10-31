@@ -1,6 +1,6 @@
 // "Repo Heads" view in Source Control: a table with one row per repository VS Code knows about
 // (workspace repos, submodules, nested repos): what is checked out, how it compares with the trunk on origin,
-// the parent pin and extra worktrees. Refreshes when VS Code's git state changes, on a timer, and on demand.
+// where its work was merged into the trunk, the parent pin and extra worktrees. Refreshes when VS Code's git state changes, on a timer, and on demand.
 const vscode = require("vscode");
 const path = require("node:path");
 const { repoStatus, health, git } = require("./status");
@@ -68,6 +68,8 @@ class RepoHeadsView {
         const vsClass = s.vs.behind || s.vs.ahead || !s.vs.trunk ? "warn" : "ok";
         const pin = !s.pin ? `<span class="dim">—</span>` : s.pin.state === "matches" ? `<span class="ok">✓</span>` : `<span class="warn">${esc(s.pin.text)}</span>`;
         const branch = s.branch ? esc(s.branch) : `<span class="dim">detached</span>`;
+        const merged = (m) =>
+          m ? `<span class="ok" title="${esc(m.sha.slice(0, 8))} ${esc(m.subject)}">${esc(m.text)}</span>` : `<span class="dim">—</span>`;
         const trees = s.worktrees.length ? `<span class="badge">${s.worktrees.length}</span>` : `<span class="dim">—</span>`;
         const repoRow = `<tr title="${esc(s.dir)}">
           <td class="icon ${ok ? "ok" : "warn"}">${ok ? "✓" : "⚠"}</td>
@@ -75,6 +77,7 @@ class RepoHeadsView {
           <td>${branch}${s.dirty ? ` <span class="warn" title="uncommitted changes">●</span>` : ""}</td>
           <td class="mono dim">${esc(s.sha)}</td>
           <td class="${vsClass}">${esc(s.vs.text)}</td>
+          <td class="mono">${merged(s.merged)}</td>
           <td>${pin}</td>
           <td>${trees}</td>
         </tr>`;
@@ -84,8 +87,10 @@ class RepoHeadsView {
           <td></td>
           <td class="repo"><span class="dim">└</span> <a data-open="${esc(w.path)}">${esc(path.basename(w.path))}</a></td>
           <td>${w.branch ? esc(w.branch) : `<span class="dim">detached</span>`}</td>
-          <td class="mono dim">${esc(w.sha)}</td>
-          <td colspan="3" class="dim">worktree</td>
+          <td class="mono dim">${esc((w.sha ?? "").slice(0, 8))}</td>
+          <td class="dim">worktree</td>
+          <td class="mono">${merged(w.merged)}</td>
+          <td colspan="2"></td>
         </tr>`,
           )
           .join("");
@@ -116,7 +121,7 @@ class RepoHeadsView {
   .empty { color: var(--vscode-descriptionForeground); padding: 8px 0; }
 </style></head><body>
 ${this.statuses.length ? `<table>
-  <thead><tr><th></th><th>Repo</th><th>Branch</th><th>Commit</th><th>vs origin</th><th>Pin</th><th>Worktrees</th></tr></thead>
+  <thead><tr><th></th><th>Repo</th><th>Branch</th><th>Commit</th><th>vs origin</th><th>Merged</th><th>Pin</th><th>Worktrees</th></tr></thead>
   <tbody>${this.rows()}</tbody>
 </table>` : `<div class="empty">Loading…</div>`}
 <script>
