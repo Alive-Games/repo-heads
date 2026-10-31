@@ -1,8 +1,8 @@
 {
   "name": "repo-heads",
   "displayName": "Repo Heads",
-  "description": "See every repo, submodule and worktree in your workspace at a glance: branch, commit, ahead/behind main, whether submodules match their parent's pin, and worktrees.",
-  "version": "1.0.0",
+  "description": "See every repo, submodule and worktree in your workspace at a glance: branch, commit, ahead/behind main, where each branch was merged, whether submodules match their parent's pin, and worktrees.",
+  "version": "1.1.0",
   "publisher": "alive-games",
   "license": "MIT",
   "engines": {
