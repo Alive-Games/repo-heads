@@ -17,6 +17,7 @@ One row per repository: the repos in your workspace, every initialized submodule
 | Branch | The checked-out branch, or `detached` (normal for submodules). ● means uncommitted changes |
 | Commit | The short commit hash |
 | vs origin | `= main`, `N behind main`, `N ahead of main`, or both, as of the last fetch |
+| Merged | Where the row's commit landed on the trunk: `main` when that is the trunk's latest commit, otherwise the short hash of the trunk commit that brought it in (hover for its subject); `—` when it isn't merged. Regular merges and fast-forwards are found by ancestry, squash merges and rebases by an identical patch among the trunk's last 300 commits. Shown for repos and for each worktree, so merged worktrees are easy to spot |
 | Pin | For submodules: ✓ when the checkout matches the commit the parent repo records, or the commit the parent pins when it does not |
 | Worktrees | How many extra worktrees the repo has. Each one is listed below it; click to open it in a new window |
 
